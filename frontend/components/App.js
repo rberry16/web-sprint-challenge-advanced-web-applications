@@ -18,6 +18,7 @@ export default function App() {
   const [currentArticleId, setCurrentArticleId] = useState()
   const [spinnerOn, setSpinnerOn] = useState(false)
 
+
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate()
   const redirectToLogin = () => {navigate('/')}
@@ -29,7 +30,7 @@ export default function App() {
     // and a message saying "Goodbye!" should be set in its proper state.
     // In any case, we should redirect the browser back to the login screen,
     // using the helper above.
-    localStorage.setItem('token', null);
+    localStorage.removeItem('token')
     setMessage('Goodbye!');
     redirectToLogin();
   }
@@ -47,12 +48,13 @@ export default function App() {
       .then(res => {
         localStorage.setItem('token', res.data.token);
         setMessage(res.data.message);
+        navigate('articles');
       })
       .catch(err => {
         console.error(err);
       })
-      redirectToArticles();
       setSpinnerOn(false);
+      // navigate('articles')
   }
 
   const getArticles = () => {
@@ -94,7 +96,7 @@ export default function App() {
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
     // You got this!
-    axioswithAuth().put(articlesUrl`/${article_id}`, article)
+    axioswithAuth().put(`http://localhost:9000/api/articles/:${article_id}`, article)
       .then(res => {
         console.log(res);
       })
@@ -105,12 +107,17 @@ export default function App() {
 
   const deleteArticle = article_id => {
     // ✨ implement
-    axioswithAuth().delete(articlesUrl`/${article_id}`)
+    axioswithAuth().delete(`http://localhost:9000/api/articles/${article_id}`)
       .then(res => {
-        console.log(res);
+        setMessage(res.data.message);
       })
       .catch(err => {
         console.error(err);
+      })
+
+    axioswithAuth().get(articlesUrl)
+      .then(res => {
+        setArticles(res.data.articles);
       })
   }
 

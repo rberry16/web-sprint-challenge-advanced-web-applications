@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import PT from 'prop-types'
+import Articles from './Articles'
 
 const initialFormValues = { title: '', text: '', topic: '' }
+const initialArticleValues = {article_id: '', title: '', text: '', topic: ''}
 
 export default function ArticleForm(props) {
   const [values, setValues] = useState(initialFormValues)
   // ✨ where are my props? Destructure them here
   const {postArticle, updateArticle, setCurrentArticleId, currentArticle} = props;
 
+
   useEffect(() => {
     // ✨ implement
     // Every time the `currentArticle` prop changes, we should check it for truthiness:
     // if it's truthy, we should set its title, text and topic into the corresponding
     // values of the form. If it's not, we should reset the form back to initial values.
-  })
+  }, [currentArticle])
 
   const onChange = evt => {
     const { id, value } = evt.target
