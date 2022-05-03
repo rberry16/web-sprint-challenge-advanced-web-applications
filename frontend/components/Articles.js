@@ -4,12 +4,13 @@ import PT from 'prop-types'
 
 export default function Articles(props) {
   // ✨ where are my props? Destructure them here
-  const {getArticles, articles, deleteArticle, setCurrentArticle, setCurrentArticleId} = props;
+  const {getArticles, articles, deleteArticle, setCurrentArticle, setCurrentArticleId, setSpinnerOn} = props;
   const token = localStorage.getItem('token');
   
   // ✨ implement conditional logic: if no token exists
   // we should render a Navigate to login screen (React Router v.6)
-  // if (token === null) { return <Navigate to={'/'} />}
+  if (token === null) { return <Navigate to={'/'} />}
+
 
   const editHandler = (obj) => {
   setCurrentArticleId(obj.article_id);
@@ -22,6 +23,10 @@ export default function Articles(props) {
     // ✨ grab the articles here, on first render only
     getArticles();
   }, [])
+
+  useEffect(() => {
+    setSpinnerOn(false);
+  }, [articles])
 
 
   return (

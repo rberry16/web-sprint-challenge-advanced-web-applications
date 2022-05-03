@@ -54,7 +54,7 @@ export default function App() {
       .catch(err => {
         console.error(err);
       })
-      // setSpinnerOn(false);
+      // ;
       // navigate('articles')
   }
 
@@ -77,7 +77,7 @@ export default function App() {
       .catch(err => {
         redirectToLogin();
       })
-      setSpinnerOn(false);
+      ;
   }
 
   const postArticle = article => {
@@ -85,19 +85,8 @@ export default function App() {
     // The flow is very similar to the `getArticles` function.
     // You'll know what to do! Use log statements or breakpoints
     // to inspect the response from the server.
+    setSpinnerOn(true);
     axioswithAuth().post(articlesUrl, article)
-      .then(res => {
-        setMessage(res.data.message);
-      })
-      .catch(err => {
-        console.error(err);
-      })
-  }
-
-  const updateArticle = ( article_id, article ) => {
-    // ✨ implement
-    // You got this!
-    axioswithAuth().put(`http://localhost:9000/api/articles/${article_id}`, article)
       .then(res => {
         setMessage(res.data.message);
       })
@@ -111,8 +100,27 @@ export default function App() {
       })
   }
 
+  const updateArticle = ( article_id, article ) => {
+    // ✨ implement
+    // You got this!
+    axioswithAuth().put(`http://localhost:9000/api/articles/${article_id}`, article)
+      .then(res => {
+        setMessage(res.data.message);
+      })
+      .catch(err => {
+        console.error(err);
+      })
+      setSpinnerOn(true);
+      axioswithAuth().get(articlesUrl)
+      .then(res => {
+        setArticles(res.data.articles);
+      })
+      // ;
+  }
+
   const deleteArticle = article_id => {
     // ✨ implement
+    setSpinnerOn(true);
     axioswithAuth().delete(`http://localhost:9000/api/articles/${article_id}`)
       .then(res => {
         setMessage(res.data.message);
@@ -144,7 +152,7 @@ export default function App() {
           <Route path="articles" element={
             <>
               <ArticleForm postArticle={postArticle} updateArticle={updateArticle} setCurrentArticleId={setCurrentArticleId} currentArticle={currentArticle} setCurrentArticle={setCurrentArticle} />
-              <Articles getArticles={getArticles} articles={articles} deleteArticle={deleteArticle} setCurrentArticle={setCurrentArticle} currentArticle={currentArticle} setCurrentArticleId={setCurrentArticleId} />
+              <Articles setSpinnerOn={setSpinnerOn} getArticles={getArticles} articles={articles} deleteArticle={deleteArticle} setCurrentArticle={setCurrentArticle} currentArticle={currentArticle} setCurrentArticleId={setCurrentArticleId} />
             </>
           } />
         </Routes>
