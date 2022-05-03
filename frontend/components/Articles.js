@@ -1,16 +1,22 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import PT from 'prop-types'
 
 export default function Articles(props) {
   // ✨ where are my props? Destructure them here
-  const {getArticles, articles, deleteArticle, setCurrentArticleId, currentArticleId} = props;
+  const {getArticles, articles, deleteArticle, setCurrentArticle, setCurrentArticleId} = props;
   const token = localStorage.getItem('token');
   
-  console.log(articles)
   // ✨ implement conditional logic: if no token exists
   // we should render a Navigate to login screen (React Router v.6)
   // if (token === null) { return <Navigate to={'/'} />}
+
+  const editHandler = (obj) => {
+  setCurrentArticleId(obj.article_id);
+  setCurrentArticle(obj);
+}
+  
+  
 
   useEffect(() => {
     // ✨ grab the articles here, on first render only
@@ -35,7 +41,7 @@ export default function Articles(props) {
                   <p>Topic: {art.topic}</p>
                 </div>
                 <div>
-                  <button disabled={false} onClick={() => setCurrentArticleId(art.article_id)}>Edit</button>
+                  <button disabled={false} onClick={() => editHandler(art)}>Edit</button>
                   <button disabled={false} onClick={() => deleteArticle(art.article_id)}>Delete</button>
                 </div>
               </div>
@@ -45,6 +51,7 @@ export default function Articles(props) {
     </div>
   )
 }
+
 
 // 🔥 No touchy: Articles expects the following props exactly:
 Articles.propTypes = {
