@@ -89,14 +89,10 @@ export default function App() {
     axioswithAuth().post(articlesUrl, article)
       .then(res => {
         setMessage(res.data.message);
+        setArticles([...articles, res.data.article]);
       })
       .catch(err => {
         console.error(err);
-      })
-
-      axioswithAuth().get(articlesUrl)
-      .then(res => {
-        setArticles(res.data.articles);
       })
   }
 
@@ -106,14 +102,12 @@ export default function App() {
     axioswithAuth().put(`http://localhost:9000/api/articles/${article_id}`, article)
       .then(res => {
         setMessage(res.data.message);
+        // console.log(res.data)
+        const newArts = articles.filter(art => art.article_id !== res.data.article.article_id)
+        setArticles([...newArts, res.data.article])
       })
       .catch(err => {
         console.error(err);
-      })
-      setSpinnerOn(true);
-      axioswithAuth().get(articlesUrl)
-      .then(res => {
-        setArticles(res.data.articles);
       })
       // ;
   }
@@ -124,15 +118,18 @@ export default function App() {
     axioswithAuth().delete(`http://localhost:9000/api/articles/${article_id}`)
       .then(res => {
         setMessage(res.data.message);
+        articles.map(art => {
+          if (art.article_id === article_id) {
+            articles.splice(art);
+            setArticles(articles);
+          }
+        });
       })
       .catch(err => {
         console.error(err);
       })
-
-    axioswithAuth().get(articlesUrl)
-      .then(res => {
-        setArticles(res.data.articles);
-      })
+      // setArticles(articles);
+      setSpinnerOn(false);
   }
 
   return (
